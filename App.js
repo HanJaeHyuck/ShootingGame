@@ -1,6 +1,6 @@
 class App {
     constructor(){
-        App.app = this; //싱글톤을 위해 App에 스태틱으로 넣음
+        App.app = this; // 앱에 스태틱으로 넣었다 이말이야
         this.gameWidth = 400;
         this.gameHeight = 600;
 
@@ -13,12 +13,22 @@ class App {
         this.backList = []; //배경그림 리스트
         this.playerBulletList = []; //플레이어 총알 리스트
 
+        this.enemyList = []; //적기체 저장 리스트
+        this.expList = []; //폭발리스트
+
+        //여기에 스테이지 데이터 제어 변수들이 들어갑니다.
+        this.gameTimer = 0; //게임이 시작되고 몇초가 흘렀는지 저장
+        this.stageIdx = 0; //지금 몇번째 적을 만들어내는지 저장
+        this.stageData = []; //스테이지의 데이터
+
         this.init(); //초기화 함수
     }
 
     async init(){
         this.imageList.player = await this.loadImage("player.png");
         this.imageList.back = await this.loadImage("back.png");
+        this.imageList.enemy = await this.loadImage("enemy1.png");
+        this.imageList.explosion = await this.loadImage("explosion.png");
         
         //백그라운드 생성
         for(let i = 0; i < 3; i++){
@@ -32,18 +42,40 @@ class App {
             this.gameWidth / 2 - 30, this.gameHeight - 60,
             60, 40, this.imageList.player, this);
 
+        let stage = new Stage(this.gameWidth, this.gameHeight, this.imageList);
+        this.stageData = stage.stage1;
+        
+        // let tempExp = new Explosion(100, 100, 60, 60, this.imageList.explosion);
+        // this.expList.push(tempExp);
+
         requestAnimationFrame(this.frame.bind(this));
     }
 
-    getOrCreateBullet(x, y, r, s, v){
-        let bullet = this.playerBulletList.find(x => !x.active);
-        if(bullet === undefined){
-            bullet = new Bullet();
-            bullet.setActive(x, y, r, s, v);
-            this.playerBulletList.push(bullet);
-        }else {
-            bullet.setActive(x, y, r, s, v);
+    getOrCreateExplosion(x, y, w, h){
+        let exp = this.expList.find(x => !x.active);
+        if(exp === undefined){
+            exp = new Explosion(this.imageList.explosion);
+            this.expList.push(exp);
         }
+        exp.setActive(x, y, w, h);
+    }
+
+    getOrCreateBullet(x, y, r, s, v, isEnemy = true){
+        let bullet = this.playerBulletList.find(x=> !x.active);
+        if(bullet == undefined) {
+            bullet = new Bullet();    
+            this.playerBulletList.push(bullet);
+        }
+        bullet.setActive(x,y,r,s,v, isEnemy);
+    }
+
+    getOrCreateEnemy(data){
+        let e = this.enemyList.find(x => !x.active);
+        if(e === undefined){
+            e = new Enemy();
+            this.enemyList.push(e);
+        }
+        e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v);
     }
 
     loadImage(name){
@@ -66,6 +98,8 @@ class App {
     }
 
     update(delta){
+        this.gameTimer += delta; //이렇게 되면 게임 진행시간이 this.gameTimer에 들어간다.
+
         this.backList.forEach(back => back.update(delta));
         if(this.backList[0].y > this.gameHeight){
             let first = this.backList.shift();
@@ -75,15 +109,39 @@ class App {
         this.player.update(delta);
         this.player.checkOut(this.gameWidth, this.gameHeight);
 
-        this.playerBulletList.forEach(b => b.update(delta));
-    }
+        let nowEnemy = this.stageData[this.stageIdx];
+        if(nowEnemy !== undefined && nowEnemy.time <= this.gameTimer){
+            this.getOrCreateEnemy(nowEnemy.data);
+            this.stageIdx++;
+        }
 
+        this.playerBulletList.forEach(b => b.update(delta));
+        this.enemyList.forEach(e => e.update(delta));
+
+        this.playerBulletList.filter(b => b.active).forEach(b => {
+            if(!b.isEnemy){
+                this.enemyList.filter(e => e.active).forEach(e => {
+                    if(e.checkCollision(b.x, b.y, b.r)){
+                        e.setDamage(b.damage);
+                        b.active = false;
+                    }
+                });
+            }else {
+                //적총알이 플레이어에 충돌했는지를 검사
+            }
+        });
+
+        this.expList.forEach(e => e.update(delta));
+    }
+   
     render(){
         this.ctx.clearRect(0,0,this.gameWidth, this.gameHeight);
         this.backList.forEach(back => back.render(this.ctx));
 
         this.player.render(this.ctx);
         this.playerBulletList.forEach(b => b.render(this.ctx));
+        this.enemyList.forEach(e => e.render(this.ctx));
+        this.expList.forEach(e => e.render(this.ctx));
     }
 
 }

@@ -1,6 +1,6 @@
 class Player {
-    constructor(x, y, w, h, img, app){
-        this.app = app;
+    constructor(x, y, w, h, img,app){
+    	this.app = app;
         this.x = x;
         this.y = y;
         this.w = w;
@@ -8,6 +8,8 @@ class Player {
         this.img = img;
         this.keyArr = [];
         this.speed = 150;
+        this.fireTerm = 0.2;
+        this.currentFireTerm = 0;
         this.init();        
     }
 
@@ -17,7 +19,7 @@ class Player {
             if(e.code === "ArrowRight") this.keyArr[1] = true;
             if(e.code === "ArrowUp")    this.keyArr[2] = true;
             if(e.code === "ArrowDown")  this.keyArr[3] = true;
-            if(e.code === "Space") this.fire();
+            if(e.code === "Space") 		this.fire();
         });
 
         document.addEventListener("keyup", e => {
@@ -25,16 +27,21 @@ class Player {
             if(e.code === "ArrowRight") this.keyArr[1] = false;
             if(e.code === "ArrowUp")    this.keyArr[2] = false;
             if(e.code === "ArrowDown")  this.keyArr[3] = false;
-        });
-
+        })
     }
 
     fire(){
-        this.app.getOrCreateBullet(
-            this.x + this.w / 2, this.y, 3, 300, new Vector(0, -1));
+        if(this.currentFireTerm > 0) return;
+
+        this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
+        this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
+        this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);
+        this.currentFireTerm = this.fireTerm;
     }
 
     update(d){
+        if(this.currentFireTerm > 0) this.currentFireTerm -= d;
+
         let dx = 0, dy = 0;
         if(this.keyArr[0])  dx = -1;
         if(this.keyArr[1])  dx = 1;
