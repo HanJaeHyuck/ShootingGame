@@ -1,4 +1,4 @@
-class Enemy{
+class Boss{
     constructor(){
         this.x = null;
         this.y = null;
@@ -10,6 +10,7 @@ class Enemy{
         this.active = false;
         this.hp = null;
         this.fireTerm = 1000; //2초 간격으로 사용한다.
+        this.clear =document.querySelector("#stageClear");
     } 
 
     reset (x, y, w, h, img, s, v, hp = 5){
@@ -35,6 +36,7 @@ class Enemy{
     explosion(){
         //폭발이펙트 생성
         App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
+        this.clear.style.display ="block";
         this.active = false;
     }
 
@@ -46,7 +48,19 @@ class Enemy{
     }
  
     update(d){
-        if(!this.active) return;
+        
+        if(!this.hp){ 
+            
+            return; 
+        }
+        if(!this.active){
+            this.clear.style.display ="block";
+             return;   
+        } 
+
+        if(this.y > 100) this.y = 100;
+
+        
         let normal = this.vector.normalize();
         this.x += normal.x * d * this.speed;
         this.y += normal.y * d * this.speed;

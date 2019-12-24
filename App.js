@@ -5,6 +5,7 @@ class App {
         this.gameHeight = 600;
 
         this.canvas = document.querySelector("#myGame");
+        this.gameover = document.querySelector("#gameover");
         this.ctx = this.canvas.getContext("2d");
         this.start = false;
         this.imageList = {}; //이미지 저장 오브젝트
@@ -66,13 +67,19 @@ class App {
             bullet = new Bullet();    
             this.playerBulletList.push(bullet);
         }
-        bullet.setActive(x,y,r,s,v, isEnemy);
+         bullet.setActive(x,y,r,s,v, isEnemy);
     }
 
     getOrCreateEnemy(data){
         let e = this.enemyList.find(x => !x.active);
         if(e === undefined){
-            e = new Enemy();
+
+            if(data.t == 0) {
+                e = new Enemy();
+            } else if(data.t == 1) {
+                e = new Boss(); 
+            }
+            
             this.enemyList.push(e);
         }
         e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v);
@@ -98,6 +105,12 @@ class App {
     }
 
     update(delta){
+        if(!this.player.active) {
+            this.gameover.style.display = "block";
+            return;
+                        
+        }
+
         this.gameTimer += delta; //이렇게 되면 게임 진행시간이 this.gameTimer에 들어간다.
 
         this.backList.forEach(back => back.update(delta));
@@ -127,7 +140,12 @@ class App {
                     }
                 });
             }else {
-                //적총알이 플레이어에 충돌했는지를 검사
+                if(this.player.active) {
+                    if(this.player.checkCollision(b.x, b.y, b.r)){
+                        this.player.setDamage(b.damage);
+                        b.active = false;
+                    }
+                }
             }
         });
 

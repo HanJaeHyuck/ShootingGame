@@ -8,6 +8,7 @@
     <title>Document</title>
     <script src="Vector.js"></script>
     <script src="Stage.js"></script>
+    <script src="Boss.js"></script>
     <script src="Enemy.js"></script>
     <script src="Background.js"></script>
     <script src="Bullet.js"></script>
@@ -15,17 +16,61 @@
     <script src="App.js"></script>
     <script src="Explosion.js"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
         #myGame {
             border: 1px solid #ddd;
+        }
+        button {
+            border: 0;
+            width: 120px;
+            height: 30px;
+            position: absolute;
+            top: 285px;
+            left: 140px;
+            border-radius: 3px;
+            background-color: #3f51b5;
+            color: #ff9800;
+        }
+
+        #gameover { 
+            top: 0;
+            left: 0;
+            position: absolute;
+            width: 400px;
+            height: 600px;
+            display: none;
+            background-image: url(images/gameover.png);
+            background-size: 100% 100%;
+        }
+
+        #stageClear {
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 200px;
+            display: none;
+            background-image: url(images/stageclear.jpg);
+            background-size: 100% 100%;
+            position: absolute;
         }
     </style>
 </head>
 <body>
     <canvas id="myGame" width="400" height="600"></canvas>
+    <button class="startbtn">GAMESTART</button>
+    <div id="gameover"></div>
+    <div id="stageClear"></div>
+    
     <script>
-        window.addEventListener("load", ()=>{
+        this.canvas = document.querySelector("#myGame");
+        let btn =document.querySelector(".startbtn");
+        btn.addEventListener("click",  (e)=> {
             let app = new App();
-        });  
+            btn.style.display ="none";
+        });
     </script>
 
 </body>

@@ -6,11 +6,20 @@ class Player {
         this.w = w;
         this.h = h;
         this.img = img;
+        this.hp = 3;
         this.keyArr = [];
         this.speed = 150;
         this.fireTerm = 0.2;
         this.currentFireTerm = 0;
-        this.init();        
+        this.init();
+        this.active = true;        
+    }
+
+    setDamage(value){
+        this.hp -= value;
+        if(this.hp <= 0){
+            this.explosion();
+        }
     }
 
     init(){
@@ -31,6 +40,7 @@ class Player {
     }
 
     fire(){
+        if(!this.active) return;
         if(this.currentFireTerm > 0) return;
 
         this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
@@ -38,10 +48,24 @@ class Player {
         this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);
         this.currentFireTerm = this.fireTerm;
     }
+    
+
+    checkCollision(x,y,r){
+        let centerX = this.x + this.w / 2;
+        let centerY = this.y + this.h / 2;
+        let d = Math.pow(centerX - x, 2) + Math.pow(centerY - y,2);
+        return d < Math.pow(r + Math.min(this.w, this.h) / 2, 2);
+    }
 
     update(d){
+        if(!this.active) return;
         if(this.currentFireTerm > 0) this.currentFireTerm -= d;
 
+
+        if(this.hp < 1) {
+            this.a = document.querySelector("#gameover");
+            this.a.style.display ="block";
+        }
         let dx = 0, dy = 0;
         if(this.keyArr[0])  dx = -1;
         if(this.keyArr[1])  dx = 1;
@@ -52,6 +76,12 @@ class Player {
         this.y += dy * d * this.speed;
     }
 
+    explosion(){
+        //폭발이펙트 생성
+        App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
+        this.active = false;
+    }
+
     checkOut(w, h){
         if(this.x < 0 )             this.x = 0;
         if(this.x + this.w >= w)    this.x = w - this.w;
@@ -60,6 +90,9 @@ class Player {
     }
 
     render(ctx){
+        if(!this.active) return;
         ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
     }
+
+    
 }
