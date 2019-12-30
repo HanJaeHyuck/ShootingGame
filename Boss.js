@@ -48,9 +48,7 @@ class Boss{
     }
  
     update(d){
-        
         if(!this.hp){ 
-            
             return; 
         }
         if(!this.active){
