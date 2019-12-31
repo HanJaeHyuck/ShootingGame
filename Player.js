@@ -65,6 +65,7 @@ class Player {
         if(this.hp < 1) {
             this.a = document.querySelector("#gameover");
             this.a.style.display ="block";
+            return;
         }
         let dx = 0, dy = 0;
         if(this.keyArr[0])  dx = -1;

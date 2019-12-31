@@ -43,6 +43,8 @@ class Boss{
     fire(){ 
         if(!this.active) return;
         App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0, 1));
+        App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-1, 1));
+        App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(1, 1));
         
         setTimeout(this.fire.bind(this), this.fireTerm); //2초 간격으로 쏘기 하기 위함
     }
@@ -53,7 +55,7 @@ class Boss{
         }
         if(!this.active){
             this.clear.style.display ="block";
-             return;   
+            return;   
         } 
 
         if(this.y > 100) this.y = 100;
