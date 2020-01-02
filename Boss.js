@@ -10,7 +10,7 @@ class Boss{
         this.active = false;
         this.hp = null;
         this.fireTerm = 1000; //2초 간격으로 사용한다.
-        this.clear =document.querySelector("#stageClear");
+        // this.clear = document.querySelector("#stageClear");
     } 
 
     reset (x, y, w, h, img, s, v, hp = 5){
@@ -53,10 +53,10 @@ class Boss{
         if(!this.hp){ 
             return; 
         }
-        if(!this.active){
-            this.clear.style.display ="block";
-            return;   
-        } 
+        // if(!this.active){
+        //     this.clear.style.display ="block";
+        //     return;   
+        // } 
 
         if(this.y > 100) this.y = 100;
 

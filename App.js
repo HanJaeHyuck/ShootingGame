@@ -7,10 +7,12 @@ class App {
         this.canvas = document.querySelector("#myGame");
         this.gameover = document.querySelector("#gameover");
         this.ctx = this.canvas.getContext("2d");
+        this.clear = document.querySelector("#stageClear");
         this.start = false;
         this.imageList = {}; //이미지 저장 오브젝트
 
         this.player = null;
+        this.boss = null;
         this.backList = []; //배경그림 리스트
         this.playerBulletList = []; //플레이어 총알 리스트
 
@@ -105,11 +107,11 @@ class App {
     }
 
     update(delta){
-        if(!this.player.active) {
-            this.gameover.style.display = "block";
-            return;
+        // if(!this.player.active) {
+        //     this.gameover.style.display = "block";
+        //     return;
                         
-        }
+        // } 
 
         this.gameTimer += delta; //이렇게 되면 게임 진행시간이 this.gameTimer에 들어간다.
 

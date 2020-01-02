@@ -61,12 +61,6 @@ class Player {
         if(!this.active) return;
         if(this.currentFireTerm > 0) this.currentFireTerm -= d;
 
-
-        if(this.hp < 1) {
-            this.a = document.querySelector("#gameover");
-            this.a.style.display ="block";
-            return;
-        }
         let dx = 0, dy = 0;
         if(this.keyArr[0])  dx = -1;
         if(this.keyArr[1])  dx = 1;
