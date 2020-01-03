@@ -65,9 +65,19 @@ class Boss{
         this.x += normal.x * d * this.speed;
         this.y += normal.y * d * this.speed;
 
+        if(this.x < 0 ) this.vector.x = 1;
+        if(this.x + this.w >= 500) {
+            this.vector.x = -1;
+        }   
+
         if(this.x < -this.w * 2 || this.y < - this.h * 2 || this.x > this.w + App.app.gameWidth || this.y > this.h + App.app.gameHeight) {
             this.active = false;
         }
+
+        
+        console.log(this.vector.x);
+        // console.log(this.w);
+         
     }
 
     checkCollision(x,y,r){

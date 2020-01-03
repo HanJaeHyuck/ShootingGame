@@ -2,8 +2,8 @@ class App {
     constructor(){
         
         App.app = this; // 앱에 스태틱으로 넣었다 이말이야
-        this.gameWidth = 400;
-        this.gameHeight = 600;
+        this.gameWidth = 500;
+        this.gameHeight = 700;
 
         this.canvas = document.querySelector("#myGame");
         this.gameover = document.querySelector("#gameover");
@@ -31,16 +31,17 @@ class App {
     async init(){    
         
         this.imageList.player = await this.loadImage("/images/player.png");
-        console.log("asdasd");
-        this.imageList.back = await this.loadImage("/images/back.png");
-        console.log("2");
+        this.imageList.back = await this.loadImage("/images/back1.png");
         this.imageList.enemy = await this.loadImage("/images/enemy.png");
-        console.log("3");
         this.imageList.boss = await this.loadImage("/images/boss.png");
-        console.log("4");
-        this.imageList.explosion = await this.loadImage("/images/explosion.png");
-        console.log("5");
-    
+        this.imageList.explosion = await this.loadImage("/images/exp.png");
+        //1스테이지 적
+        this.imageList.Renemy1 = await this.loadImage("/images/redenemy1.png");
+        this.imageList.Renemy2 = await this.loadImage("/images/redenemy2.png");
+        this.imageList.Renemy3 = await this.loadImage("/images/redenemy3.png");
+        this.imageList.Renemy4 = await this.loadImage("/images/redenemy4.png");
+        this.imageList.Renemy5 = await this.loadImage("/images/redenemy5.png");
+        this.imageList.Rboss = await this.loadImage("/images/redboss.png");
         
         //백그라운드 생성
         for(let i = 0; i < 3; i++){
@@ -78,7 +79,7 @@ class App {
             bullet = new Bullet();    
             this.playerBulletList.push(bullet);
         }
-         bullet.setActive(x,y,r,s,v, isEnemy);
+        bullet.setActive(x,y,r,s,v, isEnemy);
     }
 
     getOrCreateEnemy(data){
@@ -116,11 +117,11 @@ class App {
     }
 
     update(delta){
-        // if(!this.player.active) {
-        //     this.gameover.style.display = "block";
-        //     return;
+        if(!this.player.active) {
+            this.gameover.style.display = "block";
+            return;
                         
-        // } 
+        } 
 
         this.gameTimer += delta; //이렇게 되면 게임 진행시간이 this.gameTimer에 들어간다.
 

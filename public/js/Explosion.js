@@ -23,7 +23,7 @@ class Explosion {
     update(d){
         if(!this.active) return;
         this.now += d;
-        this.idx = Math.floor(24 * this.now / this.duration);
+        this.idx = Math.floor(15 * this.now / this.duration);
         if(this.now > this.duration) {
             this.active = false;
         }
