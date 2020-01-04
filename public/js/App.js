@@ -3,7 +3,7 @@ class App {
         
         App.app = this; // 앱에 스태틱으로 넣었다 이말이야
         this.gameWidth = 500;
-        this.gameHeight = 700;
+        this.gameHeight = 800;
 
         this.canvas = document.querySelector("#myGame");
         this.gameover = document.querySelector("#gameover");
@@ -16,10 +16,10 @@ class App {
         this.boss = null;
         this.backList = []; //배경그림 리스트
         this.playerBulletList = []; //플레이어 총알 리스트
-
         this.enemyList = []; //적기체 저장 리스트
         this.expList = []; //폭발리스트
-
+        this.life = 3; //목숨
+        this.plus = 50;
         //여기에 스테이지 데이터 제어 변수들이 들어갑니다.
         this.gameTimer = 0; //게임이 시작되고 몇초가 흘렀는지 저장
         this.stageIdx = 0; //지금 몇번째 적을 만들어내는지 저장
@@ -28,13 +28,13 @@ class App {
         this.init(); //초기화 함수
     }
 
-    async init(){    
-        
+    async init(){ 
         this.imageList.player = await this.loadImage("/images/player.png");
         this.imageList.back = await this.loadImage("/images/back1.png");
         this.imageList.enemy = await this.loadImage("/images/enemy.png");
         this.imageList.boss = await this.loadImage("/images/boss.png");
-        this.imageList.explosion = await this.loadImage("/images/exp.png");
+        this.imageList.explosion = await this.loadImage("/images/explosion.png");
+        this.imageList.life = await this.loadImage("/images/life.png");
         //1스테이지 적
         this.imageList.Renemy1 = await this.loadImage("/images/redenemy1.png");
         this.imageList.Renemy2 = await this.loadImage("/images/redenemy2.png");
@@ -43,12 +43,11 @@ class App {
         this.imageList.Renemy5 = await this.loadImage("/images/redenemy5.png");
         this.imageList.Rboss = await this.loadImage("/images/redboss.png");
         
+        
         //백그라운드 생성
         for(let i = 0; i < 3; i++){
             this.backList.push(
-                new Background(0, - i * this.gameHeight, 
-                                this.gameWidth, this.gameHeight,
-                                this.imageList.back));
+                new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back));
         }
         //플레이어 생성(x좌표 y좌표 너비 높이 이미지)
         this.player = new Player(
@@ -57,9 +56,7 @@ class App {
 
         let stage = new Stage(this.gameWidth, this.gameHeight, this.imageList);
         this.stageData = stage.stage1;
-        
-        // let tempExp = new Explosion(100, 100, 60, 60, this.imageList.explosion);
-        // this.expList.push(tempExp);
+
 
         requestAnimationFrame(this.frame.bind(this));
     }
@@ -120,7 +117,6 @@ class App {
         if(!this.player.active) {
             this.gameover.style.display = "block";
             return;
-                        
         } 
 
         this.gameTimer += delta; //이렇게 되면 게임 진행시간이 this.gameTimer에 들어간다.
@@ -155,6 +151,7 @@ class App {
                 if(this.player.active) {
                     if(this.player.checkCollision(b.x, b.y, b.r)){
                         this.player.setDamage(b.damage);
+                        this.life -= 1;
                         b.active = false;
                     }
                 }
@@ -169,9 +166,30 @@ class App {
         this.backList.forEach(back => back.render(this.ctx));
 
         this.player.render(this.ctx);
-        this.playerBulletList.forEach(b => b.render(this.ctx));
+        this.playerBulletList.forEach(b => {
+            if(b.isEnemy) {
+                b.render(this.ctx, this.outsidecolor = "#8e1520", this.insidecolor= "#f8f9fa");
+            } else {
+                b.render(this.ctx, this.outsidecolor = "#e79143", this.insidecolor = "#f8f9fa");
+            }
+        });
         this.enemyList.forEach(e => e.render(this.ctx));
         this.expList.forEach(e => e.render(this.ctx));
+
+        for(let i = 0; i < this.life; i ++) {
+            
+            if(i == 0) {
+                this.ctx.drawImage(this.imageList.life, 0, 750, 50, 50);    
+            } else if(i == 1) {
+                this.ctx.drawImage(this.imageList.life, this.plus, 750, 50, 50);    
+            } else {
+                this.ctx.drawImage(this.imageList.life, this.plus + 50, 750, 50, 50);    
+            }
+        }
+        
+        
+
+        
     }
 
 }

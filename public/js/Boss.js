@@ -10,6 +10,7 @@ class Boss{
         this.active = false;
         this.hp = null;
         this.fireTerm = 1000; //2초 간격으로 사용한다.
+        this.show = false; //화면에 등장했는가?
         // this.clear = document.querySelector("#stageClear");
     } 
 
@@ -53,30 +54,29 @@ class Boss{
         if(!this.hp){ 
             return; 
         }
-        // if(!this.active){
-        //     this.clear.style.display ="block";
-        //     return;   
-        // } 
 
-        if(this.y > 100) this.y = 100;
+        if(!this.show && this.y > 100) {
+            this.vector.y = 0;
+            this.vector.x = 1;
+            this.show = true;
+            this.vector.normal = null;
+        }
 
-        
         let normal = this.vector.normalize();
         this.x += normal.x * d * this.speed;
         this.y += normal.y * d * this.speed;
 
-        if(this.x < 0 ) this.vector.x = 1;
-        if(this.x + this.w >= 500) {
-            this.vector.x = -1;
-        }   
+        if(this.x < 0 || this.x + this.w >= 500) {
+            this.vector.x *= -1;
+            this.vector.normal = null;
+        }
 
         if(this.x < -this.w * 2 || this.y < - this.h * 2 || this.x > this.w + App.app.gameWidth || this.y > this.h + App.app.gameHeight) {
             this.active = false;
         }
 
         
-        console.log(this.vector.x);
-        // console.log(this.w);
+        // console.log(this.x);
          
     }
 

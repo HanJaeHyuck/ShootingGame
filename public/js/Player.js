@@ -8,8 +8,8 @@ class Player {
         this.img = img;
         this.hp = 3;
         this.keyArr = [];
-        this.speed = 150;
-        this.fireTerm = 0.2;
+        this.speed = 300;
+        this.fireTerm = 0.1;
         this.currentFireTerm = 0;
         this.init();
         this.active = true;        

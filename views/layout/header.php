@@ -13,12 +13,13 @@
     <script src="/js/Enemy.js"></script>
     <script src="/js/Background.js"></script>
     <script src="/js/Bullet.js"></script>
+    <script src="/js/Item.js"></script>
     <script src="/js/Player.js"></script>
     <script src="/js/App.js"></script>
     <script src="/js/Explosion.js"></script>
+    
 </head>
 <body>
-    <div class="container-fluid">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a href="/" class="navbar-brand">ShootingGAME</a>
@@ -64,4 +65,3 @@
                 }, 3000);
             </script>
         <?php endif; ?>
-    </div>

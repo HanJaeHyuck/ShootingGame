@@ -23,7 +23,7 @@ class Explosion {
     update(d){
         if(!this.active) return;
         this.now += d;
-        this.idx = Math.floor(15 * this.now / this.duration);
+        this.idx = Math.floor(17 * this.now / this.duration);
         if(this.now > this.duration) {
             this.active = false;
         }
@@ -31,11 +31,11 @@ class Explosion {
 
     render(ctx){
         if(!this.active) return;
-        let sx = this.idx % 5 * 64;
-        let sy = Math.floor(this.idx / 5) * 64;
+        let sx = this.idx % 5 * 192;
+        let sy = Math.floor(this.idx / 5) * 192;
 
         ctx.drawImage(
-            this.img, sx, sy, 64, 64, 
+            this.img, sx, sy, 192, 192, 
             this.x, this.y, this.w, this.h);
     }
 }

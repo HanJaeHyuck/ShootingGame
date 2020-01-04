@@ -32,18 +32,18 @@ class Bullet {
         }
     }
 
-    render(ctx){
+    render(ctx, outsidecolor, insidecolor){
     	if(!this.active) return;
         ctx.beginPath();
-        ctx.fillStyle = "#f01616";
-        ctx.arc(this.x, this.y, this.r + 2, 0, Math.PI * 2);
+        ctx.fillStyle = outsidecolor;
+        ctx.arc(this.x, this.y, this.r + 3, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
 
         ctx.beginPath();
-        ctx.fillStyle = "#f8f860";
+        ctx.fillStyle = insidecolor;
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.closePath();
+        ctx.closePath();  
         ctx.fill();
     }
 }
