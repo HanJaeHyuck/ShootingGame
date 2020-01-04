@@ -12,7 +12,10 @@ class Player {
         this.fireTerm = 0.1;
         this.currentFireTerm = 0;
         this.init();
-        this.active = true;        
+        this.active = true;
+        this.bulletsound = new Audio();
+        this.bulletsound.src = "/audio/bullet.mp3";
+        // this.bulletsound.volume = 0.3;   
     }
 
     setDamage(value){
@@ -49,6 +52,8 @@ class Player {
         this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
         this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);
         this.currentFireTerm = this.fireTerm;
+        this.bulletsound.play();
+        
     }
     
 
@@ -57,6 +62,13 @@ class Player {
         let centerY = this.y + this.h / 2;
         let d = Math.pow(centerX - x, 2) + Math.pow(centerY - y,2);
         return d < Math.pow(r + Math.min(this.w, this.h) / 2, 2);
+    }
+
+    checkCrash(x, y) {
+        let centerX = this.x + this.w / 2;
+        let centerY = this.y + this.h / 2; 
+        let d = Math.pow(centerX - x, 2) + Math.pow(centerY - y,2);
+        return d < Math.pow( (y + x )/ 2 + Math.min(this.w, this.h) / 2, 2);
     }
 
     update(d){

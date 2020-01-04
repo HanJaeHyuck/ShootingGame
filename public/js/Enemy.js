@@ -10,6 +10,8 @@ class Enemy{
         this.active = false;
         this.hp = null;
         this.fireTerm = 1000; //2초 간격으로 사용한다.
+        this.boom = new Audio();
+        this.boom.src = "/audio/enemyboom.mp3";
     } 
 
     reset (x, y, w, h, img, s, v, hp = 5){
@@ -36,6 +38,7 @@ class Enemy{
         //폭발이펙트 생성
         App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
         this.active = false;
+        this.boom.play();
     }
 
     fire(){ 

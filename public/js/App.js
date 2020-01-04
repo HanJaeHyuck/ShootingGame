@@ -146,6 +146,8 @@ class App {
                         e.setDamage(b.damage);
                         b.active = false;
                     }
+
+
                 });
             }else {
                 if(this.player.active) {
@@ -158,24 +160,25 @@ class App {
             }
         });
 
+        this.enemyList.forEach( enemy => {
+            // console.log(enemy.x);
+            if(this.player.checkCrash(enemy.x, enemy.y)) {
+                this.player.setDamage(100);
+                this.life = 0;
+                console.log("sadsad");
+            }
+        });
+
+        this.enemyList.filter(b => b.active).forEach(b => {
+
+        });
+
         this.expList.forEach(e => e.update(delta));
     }
    
     render(){
         this.ctx.clearRect(0,0,this.gameWidth, this.gameHeight);
         this.backList.forEach(back => back.render(this.ctx));
-
-        this.player.render(this.ctx);
-        this.playerBulletList.forEach(b => {
-            if(b.isEnemy) {
-                b.render(this.ctx, this.outsidecolor = "#8e1520", this.insidecolor= "#f8f9fa");
-            } else {
-                b.render(this.ctx, this.outsidecolor = "#e79143", this.insidecolor = "#f8f9fa");
-            }
-        });
-        this.enemyList.forEach(e => e.render(this.ctx));
-        this.expList.forEach(e => e.render(this.ctx));
-
         for(let i = 0; i < this.life; i ++) {
             
             if(i == 0) {
@@ -186,10 +189,16 @@ class App {
                 this.ctx.drawImage(this.imageList.life, this.plus + 50, 750, 50, 50);    
             }
         }
-        
-        
-
-        
+        this.player.render(this.ctx);
+        this.playerBulletList.forEach(b => {
+            if(b.isEnemy) {
+                b.render(this.ctx, this.outsidecolor = "#8e1520", this.insidecolor= "#f8f9fa");
+            } else {
+                b.render(this.ctx, this.outsidecolor = "#e79143", this.insidecolor = "#f8f9fa");
+            }
+        });
+        this.enemyList.forEach(e => e.render(this.ctx));
+        this.expList.forEach(e => e.render(this.ctx));        
     }
 
 }

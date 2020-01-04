@@ -45,16 +45,4 @@ body {
     opacity: 0;
 }
 
-.cavas-box {
-    width: 300px;
-    height: 600px;
-    background-color: #343434;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-#startbtn {
-    border-radius: 3px !important;  
-    background-color: #343434;
-}
