@@ -1,10 +1,10 @@
 <div class="container">
-    <div class="cavas-box">            
         <canvas id="myGame" width="500" height="800" class="view"></canvas>
+    <!-- <div id="lobby" class="center position-absolute"> -->
+        <button class="startbtn">GAMESTART</button>
     </div>
-    <div id="gameover"></div>
-    <div id="stageClear"></div>
-    <button class="startbtn">GAMESTART</button>
+
+    
 </div>
     <script>
         this.canvas = document.querySelector("#myGame");

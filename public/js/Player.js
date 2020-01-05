@@ -64,11 +64,23 @@ class Player {
         return d < Math.pow(r + Math.min(this.w, this.h) / 2, 2);
     }
 
-    checkCrash(x, y) {
-        let centerX = this.x + this.w / 2;
-        let centerY = this.y + this.h / 2; 
-        let d = Math.pow(centerX - x, 2) + Math.pow(centerY - y,2);
-        return d < Math.pow( (y + x )/ 2 + Math.min(this.w, this.h) / 2, 2);
+    checkCrash(x, y, w, h) {
+        let rtnVal = false;
+        let distanceX = (this.x +  this.w/2) - x;
+        let distanceY = (this.y +  this.h/2) - y;
+        let distance = distanceX + distanceY;
+        let Pw1 = this.x + (this.w /2);
+        let Pw2 = this.x - (this.w /2);
+        let Py1 = this.h + (this.h /2);
+        let Py2 = this.h - (this.h /2);
+        let enemyR;
+        if(w < h) {
+            enemyR = w /2;
+        } else {
+            enemyR = h /2;
+        }
+        if(distance <= (enemyR + (this.w/2 -5)) * (enemyR + (this.h/2 -5))) rtnVal = true;
+        return rtnVal;
     }
 
     update(d){

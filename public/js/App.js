@@ -17,6 +17,7 @@ class App {
         this.backList = []; //배경그림 리스트
         this.playerBulletList = []; //플레이어 총알 리스트
         this.enemyList = []; //적기체 저장 리스트
+        this.itemList = [];
         this.expList = []; //폭발리스트
         this.life = 3; //목숨
         this.plus = 50;
@@ -35,6 +36,7 @@ class App {
         this.imageList.boss = await this.loadImage("/images/boss.png");
         this.imageList.explosion = await this.loadImage("/images/explosion.png");
         this.imageList.life = await this.loadImage("/images/life.png");
+        this.imageList.bulletUp = await this.loadImage("/images/bulletUp.png");
         //1스테이지 적
         this.imageList.Renemy1 = await this.loadImage("/images/redenemy1.png");
         this.imageList.Renemy2 = await this.loadImage("/images/redenemy2.png");
@@ -92,6 +94,15 @@ class App {
             this.enemyList.push(e);
         }
         e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v);
+    }
+
+    getOrCreateItem() {
+        let item = this.item.find(x => !x.active);
+        if(item == undefined) {
+            item = new Item();
+            this.itemList.push(item);
+            
+        }
     }
 
     loadImage(name){
@@ -162,7 +173,7 @@ class App {
 
         this.enemyList.forEach( enemy => {
             // console.log(enemy.x);
-            if(this.player.checkCrash(enemy.x, enemy.y)) {
+            if(this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.y)) {
                 this.player.setDamage(100);
                 this.life = 0;
                 console.log("sadsad");

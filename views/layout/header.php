@@ -54,7 +54,6 @@
                 <?= $_SESSION['err']['msg'] ?>
             </div>
             <?php unset($_SESSION['err']); ?>
-            
             <script>
                 let fade = document.querySelector(".out");
                 setTimeout(()=>{

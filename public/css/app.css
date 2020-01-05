@@ -1,6 +1,6 @@
-html {
+/* html {
     height: 100%;
-}
+} */
 
 * {
     margin: 0;
@@ -9,26 +9,15 @@ html {
 #myGame {
     border: 1px solid #ddd;
 }
-#gameover { 
-    top: 0;
-    left: 0;
-    position: absolute;
-    width: 400px;
-    height: 200px;
-    display: none;
-    background-image: url(/images/gameover.png);
-    background-size: 100% 100%;
+
+#lobby {
+    /* position: absolute; */
+    width: 500px;
+    height: 800px;
+    background-image: url(/images/main.jpg);
+    z-index: 99;
 }
-#stageClear {
-    top: 0;
-    left: 0;
-    width: 400px;
-    height: 200px;
-    display: none;
-    background-image: url(/images/stageclear.jpg);
-    background-size: 100% 100%;
-    position: absolute;
-}
+
 
 body {
     min-height: 100%;
