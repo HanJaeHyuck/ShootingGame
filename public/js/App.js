@@ -1,5 +1,7 @@
 class App {
     constructor(){
+        //https://nagarry.tistory.com/169 보고 배울만한 사이트 여러가지 캔버스랑 충돌등 여러가지 코드 구현
+        
         
         App.app = this; // 앱에 스태틱으로 넣었다 이말이야
         this.gameWidth = 500;
@@ -14,14 +16,17 @@ class App {
 
         this.player = null;
         this.boss = null;
+        
         this.backList = []; //배경그림 리스트
         this.playerBulletList = []; //플레이어 총알 리스트
         this.enemyList = []; //적기체 저장 리스트
         this.itemList = [];
         this.expList = []; //폭발리스트
+
         this.life = 3; //목숨
         this.plus = 50;
-        //여기에 스테이지 데이터 제어 변수들이 들어갑니다.
+        
+        
         this.gameTimer = 0; //게임이 시작되고 몇초가 흘렀는지 저장
         this.stageIdx = 0; //지금 몇번째 적을 만들어내는지 저장
         this.stageData = []; //스테이지의 데이터
@@ -72,6 +77,17 @@ class App {
         exp.setActive(x, y, w, h);
     }
 
+
+    getOrCreateItem(x, y, w, h ,v) {
+        let item = this.itemList.find(x => !x.active);
+        if(item == undefined) {
+            item = new Item(this.imageList.bulletUp);
+            this.itemList.push(item);
+        }
+
+        item.setActive(x, y, w, h, new Vector(1,0));
+    }
+
     getOrCreateBullet(x, y, r, s, v, isEnemy = true){
         let bullet = this.playerBulletList.find(x=> !x.active);
         if(bullet == undefined) {
@@ -83,26 +99,18 @@ class App {
 
     getOrCreateEnemy(data){
         let e = this.enemyList.find(x => !x.active);
-        if(e === undefined){
-
+        if(e === undefined) {
             if(data.t == 0) {
                 e = new Enemy();
-            } else if(data.t == 1) {
-                e = new Boss(); 
+                this.enemyList.push(e);
             }
-            
+        }
+        if(data.t == 1) {
+            e = new Boss();
             this.enemyList.push(e);
         }
-        e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v);
-    }
 
-    getOrCreateItem() {
-        let item = this.item.find(x => !x.active);
-        if(item == undefined) {
-            item = new Item();
-            this.itemList.push(item);
-            
-        }
+        e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v, data.i); 
     }
 
     loadImage(name){
@@ -142,13 +150,14 @@ class App {
         this.player.checkOut(this.gameWidth, this.gameHeight);
 
         let nowEnemy = this.stageData[this.stageIdx];
+        
         if(nowEnemy !== undefined && nowEnemy.time <= this.gameTimer){
             this.getOrCreateEnemy(nowEnemy.data);
             this.stageIdx++;
         }
 
         this.playerBulletList.forEach(b => b.update(delta));
-        this.enemyList.forEach(e => e.update(delta));
+        this.enemyList.filter(x => x.active).forEach(e => e.update(delta));
 
         this.playerBulletList.filter(b => b.active).forEach(b => {
             if(!b.isEnemy){
@@ -172,7 +181,6 @@ class App {
         });
 
         this.enemyList.forEach( enemy => {
-            // console.log(enemy.x);
             if(this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.y)) {
                 this.player.setDamage(100);
                 this.life = 0;
@@ -180,9 +188,6 @@ class App {
             }
         });
 
-        this.enemyList.filter(b => b.active).forEach(b => {
-
-        });
 
         this.expList.forEach(e => e.update(delta));
     }
@@ -208,6 +213,7 @@ class App {
                 b.render(this.ctx, this.outsidecolor = "#e79143", this.insidecolor = "#f8f9fa");
             }
         });
+        this.itemList.forEach(e => e.render(this.ctx));
         this.enemyList.forEach(e => e.render(this.ctx));
         this.expList.forEach(e => e.render(this.ctx));        
     }

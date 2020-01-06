@@ -66,21 +66,31 @@ class Player {
 
     checkCrash(x, y, w, h) {
         let rtnVal = false;
-        let distanceX = (this.x +  this.w/2) - x;
+        let distanceX = (this.x +  this.w /2) - x;
         let distanceY = (this.y +  this.h/2) - y;
-        let distance = distanceX + distanceY;
-        let Pw1 = this.x + (this.w /2);
-        let Pw2 = this.x - (this.w /2);
-        let Py1 = this.h + (this.h /2);
-        let Py2 = this.h - (this.h /2);
+        let distance = distanceX * distanceX + distanceY * distanceY;
         let enemyR;
-        if(w < h) {
-            enemyR = w /2;
+        if( w > h) {
+            enemyR = h / 2;
         } else {
-            enemyR = h /2;
+            enemyR = w / 2;
         }
-        if(distance <= (enemyR + (this.w/2 -5)) * (enemyR + (this.h/2 -5))) rtnVal = true;
+        if(distance <= (enemyR + (this.w/2 )) * (enemyR + (this.h/2)))
+            rtnVal = true;
         return rtnVal;
+    }
+
+    explosion(){
+        //폭발이펙트 생성
+        App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
+        this.active = false;
+    }
+
+    checkOut(w, h){
+        if(this.x < 0 )             this.x = 0;
+        if(this.x + this.w >= w)    this.x = w - this.w;
+        if(this.y < 0)              this.y = 0;
+        if(this.y + this.h >= h)    this.y = h - this.h;
     }
 
     update(d){
@@ -98,22 +108,9 @@ class Player {
         this.y += dy * d * this.speed;
     }
 
-    explosion(){
-        //폭발이펙트 생성
-        App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
-        this.active = false;
-    }
-
-    checkOut(w, h){
-        if(this.x < 0 )             this.x = 0;
-        if(this.x + this.w >= w)    this.x = w - this.w;
-        if(this.y < 0)              this.y = 0;
-        if(this.y + this.h >= h)    this.y = h - this.h;
-    }
-
     render(ctx){
         if(!this.active) return;
-        ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
+        ctx.drawImage(this.img, this.x, this.y, this.w-10, this.h);
     }
 
     

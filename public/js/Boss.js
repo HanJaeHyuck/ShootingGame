@@ -54,12 +54,14 @@ class Boss{
         if(!this.hp){ 
             return; 
         }
+        console.log("보스 업데이트");
 
         if(!this.show && this.y > 100) {
             this.vector.y = 0;
             this.vector.x = 1;
             this.show = true;
             this.vector.normal = null;
+            console.log("등장");
         }
 
         let normal = this.vector.normalize();

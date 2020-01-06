@@ -9,13 +9,12 @@ class Enemy{
         this.speed = null;
         this.active = false;
         this.hp = null;
-        this.item = null;
         this.fireTerm = 1000; //2초 간격으로 사용한다.
         this.boom = new Audio();
         this.boom.src = "/audio/enemyboom.mp3";
     } 
 
-    reset (x, y, w, h, img, s, v, hp = 5){
+    reset (x, y, w, h, img, s, v, hp = 5, i){
         this.x = x;
         this.y = y;
         this.w = w;
@@ -32,13 +31,21 @@ class Enemy{
         this.hp -= value;
         if(this.hp <= 0){
             this.explosion();
+            this.item();
         }
+    }
+
+    item() {
+        //아이템 생성
+        App.app.getOrCreateItem(this.x, this.y, this.w, this.h);
+        this.active = false;
     }
 
     explosion(){
         //폭발이펙트 생성
         App.app.getOrCreateExplosion(this.x, this.y, this.w, this.h);
         this.active = false;
+        
         this.boom.play();
     }
 
