@@ -26,7 +26,6 @@ class App {
         this.life = 3; //목숨
         this.plus = 50;
         
-        
         this.gameTimer = 0; //게임이 시작되고 몇초가 흘렀는지 저장
         this.stageIdx = 0; //지금 몇번째 적을 만들어내는지 저장
         this.stageData = []; //스테이지의 데이터
@@ -85,7 +84,7 @@ class App {
             this.itemList.push(item);
         }
 
-        item.setActive(x, y, w, h, new Vector(1,0));
+        item.setActive(x, y, w, h, new Vector(0,1));
     }
 
     getOrCreateBullet(x, y, r, s, v, isEnemy = true){
@@ -166,8 +165,6 @@ class App {
                         e.setDamage(b.damage);
                         b.active = false;
                     }
-
-
                 });
             }else {
                 if(this.player.active) {
@@ -180,15 +177,15 @@ class App {
             }
         });
 
-        this.enemyList.forEach( enemy => {
-            if(this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.y)) {
+        this.enemyList.filter(x => x.active).forEach( enemy => {
+            //디버그시 ctx를 넘겨줌
+            if(this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.h)) {
                 this.player.setDamage(100);
                 this.life = 0;
-                console.log("sadsad");
             }
         });
 
-
+        this.itemList.forEach(e => e.update(delta));
         this.expList.forEach(e => e.update(delta));
     }
    
@@ -215,7 +212,10 @@ class App {
         });
         this.itemList.forEach(e => e.render(this.ctx));
         this.enemyList.forEach(e => e.render(this.ctx));
-        this.expList.forEach(e => e.render(this.ctx));        
+        this.expList.forEach(e => e.render(this.ctx));    
+        // this.enemyList.filter(x => x.active).forEach(enemy => {
+        //     this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.h, this.ctx);
+        // }); 
     }
 
 }

@@ -64,10 +64,10 @@ class Player {
         return d < Math.pow(r + Math.min(this.w, this.h) / 2, 2);
     }
 
-    checkCrash(x, y, w, h) {
+    checkCrash(x, y, w, h, ctx = null) {
         let rtnVal = false;
-        let distanceX = (this.x +  this.w /2) - x;
-        let distanceY = (this.y +  this.h/2) - y;
+        let distanceX = (this.x +  this.w/2) - (x + w / 2);
+        let distanceY = (this.y +  this.h/2) - (y + h / 2);
         let distance = distanceX * distanceX + distanceY * distanceY;
         let enemyR;
         if( w > h) {
@@ -77,7 +77,22 @@ class Player {
         }
         if(distance <= (enemyR + (this.w/2 )) * (enemyR + (this.h/2)))
             rtnVal = true;
+        
+        if(ctx != null){
+            console.log("asd");
+            ctx.save();
+            ctx.strokeStyle = "#ff0000";
+            ctx.strokeRect(x, y, w, h);
+
+
+            ctx.restore();
+        }
+
         return rtnVal;
+    }
+
+    checkItem(x, y, w, h) {
+
     }
 
     explosion(){

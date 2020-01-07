@@ -38,21 +38,18 @@ class Enemy{
     item() {
         //아이템 생성
         App.app.getOrCreateItem(this.x, this.y, this.w, this.h);
-        this.active = false;
     }
 
     explosion(){
         //폭발이펙트 생성
-        App.app.getOrCreateExplosion(this.x, this.y, this.w, this.h);
         this.active = false;
-        
+        App.app.getOrCreateExplosion(this.x, this.y, this.w, this.h);
         this.boom.play();
     }
 
     fire(){ 
         if(!this.active) return;
         App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0, 1));
-        
         setTimeout(this.fire.bind(this), this.fireTerm); //2초 간격으로 쏘기 하기 위함
     }
  
