@@ -84,7 +84,7 @@ class App {
             this.itemList.push(item);
         }
 
-        item.setActive(x, y, w, h, new Vector(0,1));
+        item.setActive(x, y, 30, 50, new Vector(0,1));
     }
 
     getOrCreateBullet(x, y, r, s, v, isEnemy = true){
@@ -182,6 +182,15 @@ class App {
             if(this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.h)) {
                 this.player.setDamage(100);
                 this.life = 0;
+            }
+        });
+
+        this.itemList.filter(x => x.active).forEach( item => {
+            // console.log("123123");
+            if(this.player.checkItem(item.x, item.y, item.w, item.h)) {
+                this.player.power += 1;
+                console.log(this.player.power);
+                item.active = false;
             }
         });
 

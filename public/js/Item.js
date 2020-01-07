@@ -2,8 +2,8 @@ class Item {
     constructor(img) {
         this.x = null;
         this.y = null;
-        this.w = null;
-        this.h = null;
+        this.w = 30;
+        this.h = 30;
         this.img = img;
         this.vector = null;
         this.speed = 80;

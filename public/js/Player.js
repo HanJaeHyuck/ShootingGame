@@ -15,7 +15,7 @@ class Player {
         this.active = true;
         this.bulletsound = new Audio();
         this.bulletsound.src = "/audio/bullet.mp3";
-        // this.bulletsound.volume = 0.3;   
+        this.power = 1;
     }
 
     setDamage(value){
@@ -48,9 +48,18 @@ class Player {
         if(!this.active) return;
         if(this.currentFireTerm > 0) return;
 
-        this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
-        this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
-        this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);
+        if(this.power == 1) {
+            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);    
+        } else if(this.power == 2) {
+            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
+            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);    
+        } else if(this.power == 3) {
+            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
+            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
+            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);            
+        }
+
+
         this.currentFireTerm = this.fireTerm;
         this.bulletsound.play();
         
@@ -64,7 +73,7 @@ class Player {
         return d < Math.pow(r + Math.min(this.w, this.h) / 2, 2);
     }
 
-    checkCrash(x, y, w, h, ctx = null) {
+    checkCrash(x, y, w, h) {
         let rtnVal = false;
         let distanceX = (this.x +  this.w/2) - (x + w / 2);
         let distanceY = (this.y +  this.h/2) - (y + h / 2);
@@ -77,22 +86,23 @@ class Player {
         }
         if(distance <= (enemyR + (this.w/2 )) * (enemyR + (this.h/2)))
             rtnVal = true;
-        
-        if(ctx != null){
-            console.log("asd");
-            ctx.save();
-            ctx.strokeStyle = "#ff0000";
-            ctx.strokeRect(x, y, w, h);
-
-
-            ctx.restore();
-        }
-
         return rtnVal;
     }
 
     checkItem(x, y, w, h) {
-
+        let rtnVal = false;
+        let distanceX = (this.x +  this.w/2) - (x + w / 2);
+        let distanceY = (this.y +  this.h/2) - (y + h / 2);
+        let distance = distanceX * distanceX + distanceY * distanceY;
+        let itemR;
+        if( w > h) {
+            itemR = h / 2;
+        } else {
+            itemR = w / 2;
+        }
+        if(distance <= (itemR + (this.w/2 )) * (itemR + (this.h/2)))
+            rtnVal = true;
+        return rtnVal;
     }
 
     explosion(){
@@ -125,7 +135,7 @@ class Player {
 
     render(ctx){
         if(!this.active) return;
-        ctx.drawImage(this.img, this.x, this.y, this.w-10, this.h);
+        ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
     }
 
     
