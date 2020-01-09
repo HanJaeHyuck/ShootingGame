@@ -13,18 +13,19 @@ class App {
         this.clear = document.querySelector("#stageClear");
         this.start = false;
         this.imageList = {}; //이미지 저장 오브젝트
-
+        this.stage = null;
         this.player = null;
         this.boss = null;
-        
+        this.playStage = 1;
         this.backList = []; //배경그림 리스트
         this.playerBulletList = []; //플레이어 총알 리스트
         this.enemyList = []; //적기체 저장 리스트
         this.itemList = [];
         this.expList = []; //폭발리스트
-
         this.life = 3; //목숨
         this.plus = 50;
+        this.score = 0;
+        this.nowEnemy = null;
         
         this.gameTimer = 0; //게임이 시작되고 몇초가 흘렀는지 저장
         this.stageIdx = 0; //지금 몇번째 적을 만들어내는지 저장
@@ -35,7 +36,8 @@ class App {
 
     async init(){ 
         this.imageList.player = await this.loadImage("/images/player.png");
-        this.imageList.back = await this.loadImage("/images/back1.png");
+        this.imageList.back1 = await this.loadImage("/images/back1.png");
+        this.imageList.back2 = await this.loadImage("/images/back2.jpg");
         this.imageList.enemy = await this.loadImage("/images/enemy.png");
         this.imageList.boss = await this.loadImage("/images/boss.png");
         this.imageList.explosion = await this.loadImage("/images/explosion.png");
@@ -50,22 +52,46 @@ class App {
         this.imageList.Rboss = await this.loadImage("/images/redboss.png");
         
         
+        this.stage = new Stage(this.gameWidth, this.gameHeight, this.imageList);
         //백그라운드 생성
         for(let i = 0; i < 3; i++){
-            this.backList.push(
-                new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back));
+            this.backList.push( new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back1));
         }
+        this.stageData = this.stage.stage1;
+        
+
         //플레이어 생성(x좌표 y좌표 너비 높이 이미지)
         this.player = new Player(
             this.gameWidth / 2 - 30, this.gameHeight - 60,
             60, 40, this.imageList.player, this);
 
-        let stage = new Stage(this.gameWidth, this.gameHeight, this.imageList);
-        this.stageData = stage.stage1;
-
-
+        
         requestAnimationFrame(this.frame.bind(this));
     }
+
+    nextStage() {
+        this.playStage ++;
+        this.time = 0;
+        this.backList = [];
+        this.nowEnemy = null;
+        this.gameTimer = 0;
+        this.stageIdx = 0;
+        if(this.playStage == 2) {
+            for(let i = 0; i < 3; i++){
+                this.backList.push( new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back2));
+            }
+            this.stageData = this.stage.stage2;
+            console.log(this.stageData);
+        } else if(thjis.playStage == 3) {
+            for(let i = 0; i < 3; i++){
+                this.backList.push( new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back3));
+            }
+            this.stageData = this.stage.stage3;
+        }
+         
+    }
+
+
 
     getOrCreateExplosion(x, y, w, h){
         let exp = this.expList.find(x => !x.active);
@@ -77,14 +103,13 @@ class App {
     }
 
 
-    getOrCreateItem(x, y, w, h ,v) {
+    getOrCreateItem(x, y) {
         let item = this.itemList.find(x => !x.active);
         if(item == undefined) {
             item = new Item(this.imageList.bulletUp);
             this.itemList.push(item);
         }
-
-        item.setActive(x, y, 30, 50, new Vector(0,1));
+        item.setActive(x, y, 20, 35, new Vector(0,1));
     }
 
     getOrCreateBullet(x, y, r, s, v, isEnemy = true){
@@ -97,7 +122,7 @@ class App {
     }
 
     getOrCreateEnemy(data){
-        let e = this.enemyList.find(x => !x.active);
+        let e = this.enemyList.find(x => !x.active  && x.constructor.name != "Boss");
         if(e === undefined) {
             if(data.t == 0) {
                 e = new Enemy();
@@ -108,7 +133,6 @@ class App {
             e = new Boss();
             this.enemyList.push(e);
         }
-
         e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v, data.i); 
     }
 
@@ -133,12 +157,18 @@ class App {
 
     update(delta){
         if(!this.player.active) {
-            this.gameover.style.display = "block";
+
+            this.player = null;
+            this.bullet = null;
+            this.boss = null;
+            this.stage= null;
+            this.enemyList = null;
+            this.playerBulletList = null;
             return;
         } 
 
         this.gameTimer += delta; //이렇게 되면 게임 진행시간이 this.gameTimer에 들어간다.
-
+        
         this.backList.forEach(back => back.update(delta));
         if(this.backList[0].y > this.gameHeight){
             let first = this.backList.shift();
@@ -148,14 +178,15 @@ class App {
         this.player.update(delta);
         this.player.checkOut(this.gameWidth, this.gameHeight);
 
-        let nowEnemy = this.stageData[this.stageIdx];
+        this.nowEnemy = this.stageData[this.stageIdx];
         
-        if(nowEnemy !== undefined && nowEnemy.time <= this.gameTimer){
-            this.getOrCreateEnemy(nowEnemy.data);
+        if(this.nowEnemy !== undefined && this.nowEnemy.time <= this.gameTimer){
+            this.getOrCreateEnemy(this.nowEnemy.data);
             this.stageIdx++;
         }
 
         this.playerBulletList.forEach(b => b.update(delta));
+
         this.enemyList.filter(x => x.active).forEach(e => e.update(delta));
 
         this.playerBulletList.filter(b => b.active).forEach(b => {
@@ -186,10 +217,8 @@ class App {
         });
 
         this.itemList.filter(x => x.active).forEach( item => {
-            // console.log("123123");
             if(this.player.checkItem(item.x, item.y, item.w, item.h)) {
                 this.player.power += 1;
-                console.log(this.player.power);
                 item.active = false;
             }
         });
@@ -202,7 +231,7 @@ class App {
         this.ctx.clearRect(0,0,this.gameWidth, this.gameHeight);
         this.backList.forEach(back => back.render(this.ctx));
         for(let i = 0; i < this.life; i ++) {
-            
+        
             if(i == 0) {
                 this.ctx.drawImage(this.imageList.life, 0, 750, 50, 50);    
             } else if(i == 1) {
@@ -221,7 +250,10 @@ class App {
         });
         this.itemList.forEach(e => e.render(this.ctx));
         this.enemyList.forEach(e => e.render(this.ctx));
-        this.expList.forEach(e => e.render(this.ctx));    
+        this.expList.forEach(e => e.render(this.ctx));
+        this.ctx.font = "24px sans-serif";
+        
+        this.ctx.fillText("Score : " + Math.floor(this.score), 320, 30);
         // this.enemyList.filter(x => x.active).forEach(enemy => {
         //     this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.h, this.ctx);
         // }); 

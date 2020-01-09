@@ -2,15 +2,13 @@ class Item {
     constructor(img) {
         this.x = null;
         this.y = null;
-        this.w = 30;
-        this.h = 30;
+        this.w = 10;
+        this.h = 20;
         this.img = img;
         this.vector = null;
-        this.speed = 80;
+        this.speed = 200;
         this.active = false;
     }
-
-
 
     setActive(x, y, w, h, v){
         this.x = x;
@@ -21,7 +19,6 @@ class Item {
         this.vector = v;
         // console.log(this.vector);
     }
-
 
     update(d) {
         if(!this.active) return;
@@ -38,7 +35,9 @@ class Item {
 
     render(ctx){
         if(!this.active) return;
-        ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
+        ctx.drawImage(this.img, this.x + this.w, this.y, this.w, this.h);
+        // ctx.restore();
+        
     }
 
 

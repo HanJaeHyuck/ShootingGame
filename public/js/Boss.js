@@ -37,8 +37,8 @@ class Boss{
     explosion(){
         //폭발이펙트 생성
         App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
-        this.clear.style.display ="block";
         this.active = false;
+        App.app.nextStage();
     }
 
     fire(){ 
@@ -54,14 +54,12 @@ class Boss{
         if(!this.hp){ 
             return; 
         }
-        console.log("보스 업데이트");
 
         if(!this.show && this.y > 100) {
             this.vector.y = 0;
             this.vector.x = 1;
             this.show = true;
             this.vector.normal = null;
-            console.log("등장");
         }
 
         let normal = this.vector.normalize();

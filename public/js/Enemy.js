@@ -8,13 +8,14 @@ class Enemy{
         this.vector = null;
         this.speed = null;
         this.active = false;
+        this.item = false;
         this.hp = null;
         this.fireTerm = 1000; //2초 간격으로 사용한다.
         this.boom = new Audio();
         this.boom.src = "/audio/enemyboom.mp3";
     } 
 
-    reset (x, y, w, h, img, s, v, hp = 5, i){
+    reset (x, y, w, h, img, s, v, i, hp =5){
         this.x = x;
         this.y = y;
         this.w = w;
@@ -23,21 +24,27 @@ class Enemy{
         this.speed = s;
         this.vector = v;
         this.active = true;
+        this.item = i;
         this.hp = hp;
         this.fire();
+        console.log(this.item);
     }
 
     setDamage(value){
         this.hp -= value;
         if(this.hp <= 0){
             this.explosion();
-            this.item();
+            // console.log(this.item);
+            if(!this.item) {
+                this.itemList();
+            }
+            
         }
     }
 
-    item() {
+    itemList() {
         //아이템 생성
-        App.app.getOrCreateItem(this.x, this.y, this.w, this.h);
+        App.app.getOrCreateItem(this.x, this.y);
     }
 
     explosion(){
@@ -45,6 +52,7 @@ class Enemy{
         this.active = false;
         App.app.getOrCreateExplosion(this.x, this.y, this.w, this.h);
         this.boom.play();
+        App.app.score +=10;
     }
 
     fire(){ 

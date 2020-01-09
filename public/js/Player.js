@@ -48,17 +48,21 @@ class Player {
         if(!this.active) return;
         if(this.currentFireTerm > 0) return;
 
-        if(this.power == 1) {
-            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);    
-        } else if(this.power == 2) {
-            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
-            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);    
-        } else if(this.power == 3) {
-            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
-            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
-            this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);            
+        switch( this.power ) {
+            case 1 :
+                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
+                break;
+            case 2 :
+                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
+                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
+                break;
+            case 3 :
+            default:
+                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
+                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
+                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);            
+                break;
         }
-
 
         this.currentFireTerm = this.fireTerm;
         this.bulletsound.play();
