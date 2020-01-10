@@ -32,7 +32,7 @@
                             <a href="/game/play" class="nav-link">GAME</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/" class="nav-link">RankingBoard</a>
+                            <a href="/game/rank" class="nav-link">RankingBoard</a>
                         </li>
                         
                     </ul>

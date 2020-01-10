@@ -4,8 +4,8 @@
         <div class="col-10 offset-1">
             <form method="post">
                 <div class="form-group">
-                    <label for="userid">Email</label>
-                    <input type="email" class="form-control" id="userid" name="userid">
+                    <label for="userid">ID</label>
+                    <input type="text" class="form-control" id="userid" name="userid">
                 </div>
                 <div class="form-group">
                     <label for="password">비밀번호</label>

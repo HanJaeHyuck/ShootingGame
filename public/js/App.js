@@ -8,14 +8,18 @@ class App {
         this.gameHeight = 800;
 
         this.canvas = document.querySelector("#myGame");
-        this.gameover = document.querySelector("#gameover");
         this.ctx = this.canvas.getContext("2d");
-        this.clear = document.querySelector("#stageClear");
+        this.startbtn = document.querySelector(".startbtn");
+        this.endview = document.querySelector(".end");
+        this.scoreview = document.querySelector(".score");
+        this.cheat = document.querySelector("#cheat").value;
         this.start = false;
         this.imageList = {}; //이미지 저장 오브젝트
         this.stage = null;
         this.player = null;
         this.boss = null;
+        this.playerX = null;
+        this.playerY = null;
         this.playStage = 1;
         this.backList = []; //배경그림 리스트
         this.playerBulletList = []; //플레이어 총알 리스트
@@ -26,33 +30,47 @@ class App {
         this.plus = 50;
         this.score = 0;
         this.nowEnemy = null;
-        
+        this.stageNow = 1;
         this.gameTimer = 0; //게임이 시작되고 몇초가 흘렀는지 저장
         this.stageIdx = 0; //지금 몇번째 적을 만들어내는지 저장
         this.stageData = []; //스테이지의 데이터
-        
+        this.cnt = 1;
+        this.itemCnt = 1;
+        this.bossCnt = 1;
         this.init(); //초기화 함수
+        this.endview.style.display ="none";
     }
 
     async init(){ 
+        
         this.imageList.player = await this.loadImage("/images/player.png");
         this.imageList.back1 = await this.loadImage("/images/back1.png");
         this.imageList.back2 = await this.loadImage("/images/back2.jpg");
+        this.imageList.back3 = await this.loadImage("/images/back3.png");
         this.imageList.enemy = await this.loadImage("/images/enemy.png");
+        this.imageList.enemy2 = await this.loadImage("/images/enemy5.png");
         this.imageList.boss = await this.loadImage("/images/boss.png");
         this.imageList.explosion = await this.loadImage("/images/explosion.png");
+        this.imageList.boom = await this.loadImage("/images/boom.png");
         this.imageList.life = await this.loadImage("/images/life.png");
         this.imageList.bulletUp = await this.loadImage("/images/bulletUp.png");
         //1스테이지 적
-        this.imageList.Renemy1 = await this.loadImage("/images/redenemy1.png");
-        this.imageList.Renemy2 = await this.loadImage("/images/redenemy2.png");
-        this.imageList.Renemy3 = await this.loadImage("/images/redenemy3.png");
-        this.imageList.Renemy4 = await this.loadImage("/images/redenemy4.png");
-        this.imageList.Renemy5 = await this.loadImage("/images/redenemy5.png");
-        this.imageList.Rboss = await this.loadImage("/images/redboss.png");
+        this.imageList.stage1Enemy1 = await this.loadImage("/images/enemy2.png");
+        this.imageList.stage1Enemy2 = await this.loadImage("/images/enemy3.png");
+        this.imageList.stage1Boss = await this.loadImage("/images/enemy7.png");
+        this.imageList.seedEnemy = await this.loadImage("/images/enemy10.png");
+
+        this.imageList.stage2Enemy1 = await this.loadImage("/images/enemy9.png");
+        this.imageList.stage2Enemy2 = await this.loadImage("/images/enemy12.png");
+        this.imageList.stage2Boss = await this.loadImage("/images/boss4.png");
         
+
+
         
-        this.stage = new Stage(this.gameWidth, this.gameHeight, this.imageList);
+        // this.canvas.style.display ="blcok";
+        // this.scoreview.innerHTML = "SCORE : " + this.score;
+        
+        this.stage = new Stage(this.gameWidth, this.gameHeight, this.imageList, this.playerX);
         //백그라운드 생성
         for(let i = 0; i < 3; i++){
             this.backList.push( new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back1));
@@ -70,29 +88,29 @@ class App {
     }
 
     nextStage() {
-        this.playStage ++;
-        this.time = 0;
-        this.backList = [];
-        this.nowEnemy = null;
-        this.gameTimer = 0;
-        this.stageIdx = 0;
-        if(this.playStage == 2) {
+        if(this.playStage == 1) {
+            for(let i = 0; i < 3; i++){
+                this.backList.push( new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back1));
+            }
+            this.stageData = this.stage.stage1;
+        } else if(this.playStage == 2) {
             for(let i = 0; i < 3; i++){
                 this.backList.push( new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back2));
             }
             this.stageData = this.stage.stage2;
-            console.log(this.stageData);
-        } else if(thjis.playStage == 3) {
+        } else if(this.playStage == 3) {
             for(let i = 0; i < 3; i++){
                 this.backList.push( new Background(0, - i * this.gameHeight, this.gameWidth, this.gameHeight, this.imageList.back3));
             }
             this.stageData = this.stage.stage3;
+        } else if (this.playStage > 3) {
+            this.playStage = 1;
+            this.bossCnt = 1;
+            this.nextStage();
+            this.stageNow ++;
         }
          
     }
-
-
-
     getOrCreateExplosion(x, y, w, h){
         let exp = this.expList.find(x => !x.active);
         if(exp === undefined){
@@ -103,10 +121,19 @@ class App {
     }
 
 
-    getOrCreateItem(x, y) {
-        let item = this.itemList.find(x => !x.active);
+    getOrCreateItemBullet(x, y) {
+        let item ;
         if(item == undefined) {
             item = new Item(this.imageList.bulletUp);
+            this.itemList.push(item);
+        }
+        item.setActive(x, y, 20, 35, new Vector(0,1));
+    }
+
+    getOrCreateItemBoom(x, y) {
+        let item;
+        if(item == undefined) {
+            item = new Item(this.imageList.boom);
             this.itemList.push(item);
         }
         item.setActive(x, y, 20, 35, new Vector(0,1));
@@ -133,7 +160,7 @@ class App {
             e = new Boss();
             this.enemyList.push(e);
         }
-        e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v, data.i); 
+        e.reset(data.x, data.y, data.w, data.h, data.img, data.s, data.v, data.i, data.p); 
     }
 
     loadImage(name){
@@ -157,15 +184,22 @@ class App {
 
     update(delta){
         if(!this.player.active) {
-
             this.player = null;
             this.bullet = null;
             this.boss = null;
             this.stage= null;
             this.enemyList = null;
             this.playerBulletList = null;
+            this.endview.style.display ="block";
+            this.canvas.style.display ="none";
+            this.scoreview.innerHTML = "SCORE : " + this.score;   
             return;
         } 
+        if(this.cheat =="yydh" || this.cheat == "YYDH") {
+            this.player.hp = 500;
+        }
+        this.playerX = this.player.x;
+        this.playery = this.player.y;
 
         this.gameTimer += delta; //이렇게 되면 게임 진행시간이 this.gameTimer에 들어간다.
         
@@ -184,6 +218,7 @@ class App {
             this.getOrCreateEnemy(this.nowEnemy.data);
             this.stageIdx++;
         }
+        this.stage
 
         this.playerBulletList.forEach(b => b.update(delta));
 
@@ -207,22 +242,34 @@ class App {
                 }
             }
         });
-
-        this.enemyList.filter(x => x.active).forEach( enemy => {
-            //디버그시 ctx를 넘겨줌
-            if(this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.h)) {
-                this.player.setDamage(100);
-                this.life = 0;
-            }
-        });
-
+        
+            this.enemyList.filter(x => x.active).forEach( enemy => {
+                //디버그시 ctx를 넘겨줌
+                if(this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.h)) {
+                    setTimeout(() => {
+                        this.player.setDamage(1);
+                        this.life -= 1;
+                        this.hp --;
+                    }, 1000);
+                    if(this.player.power <= 0) {
+                        this.player.active  = false;
+                    }
+                    return;
+                }
+            });    
+        
         this.itemList.filter(x => x.active).forEach( item => {
             if(this.player.checkItem(item.x, item.y, item.w, item.h)) {
-                this.player.power += 1;
+                if(this.itemCnt == 1) {
+                    this.player.power += 1;
+                    this.itemCnt ++;
+                    return;
+                } 
+                
                 item.active = false;
             }
         });
-
+        
         this.itemList.forEach(e => e.update(delta));
         this.expList.forEach(e => e.update(delta));
     }
@@ -252,11 +299,13 @@ class App {
         this.enemyList.forEach(e => e.render(this.ctx));
         this.expList.forEach(e => e.render(this.ctx));
         this.ctx.font = "24px sans-serif";
-        
-        this.ctx.fillText("Score : " + Math.floor(this.score), 320, 30);
+        this.ctx.fillText("Score : " + Math.floor(this.score), 10, 30);
+        this.ctx.fillText(this.stageNow + " - " + this.playStage, 230, 30);
+        this.ctx.fillText( Math.floor(this.gameTimer), 470, 30);
         // this.enemyList.filter(x => x.active).forEach(enemy => {
         //     this.player.checkCrash(enemy.x, enemy.y, enemy.w, enemy.h, this.ctx);
         // }); 
     }
 
 }
+

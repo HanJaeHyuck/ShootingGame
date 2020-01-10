@@ -31,7 +31,7 @@ class UserController extends MasterController
             return;
         }
 
-        $sql = "INSERT INTO users (`id`, `name`, `password`, `level`)
+        $sql = "INSERT INTO shootingUsers (`id`, `name`, `password`, `score`)
                 VALUES (?, ?, PASSWORD(?), ?)";
         $result = DB::execute($sql, [$userid, $username, $pass, 1]);
 
@@ -53,7 +53,7 @@ class UserController extends MasterController
         $userid = $_POST['userid'];
         $pass = $_POST['password'];
 
-        $sql = "SELECT * FROM users WHERE id = ? AND password = PASSWORD(?)";
+        $sql = "SELECT * FROM shootingUsers WHERE id = ? AND password = PASSWORD(?)";
         $user = DB::fetch($sql, [$userid, $pass]);
 
         if($user ==null) {
@@ -62,7 +62,7 @@ class UserController extends MasterController
         }
 
         $_SESSION['user'] = $user;
-        Library::msgAndGo("로그인 완료!", "/", "success");
+        Library::msgAndGo("로그인 완료!", "/game/play", "success");
     }
 
     public function logout()

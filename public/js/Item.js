@@ -36,7 +36,7 @@ class Item {
     render(ctx){
         if(!this.active) return;
         ctx.drawImage(this.img, this.x + this.w, this.y, this.w, this.h);
-        // ctx.restore();
+        ctx.restore();
         
     }
 

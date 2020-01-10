@@ -9,12 +9,12 @@ class Boss{
         this.speed = null;
         this.active = false;
         this.hp = null;
-        this.fireTerm = 1000; //2초 간격으로 사용한다.
+        this.fireTerm = 1500; //2초 간격으로 사용한다.
         this.show = false; //화면에 등장했는가?
-        // this.clear = document.querySelector("#stageClear");
+        this.plusHp = 50;
     } 
 
-    reset (x, y, w, h, img, s, v, hp = 5){
+    reset (x, y, w, h, img, s, v, p, hp = 50){
         this.x = x;
         this.y = y;
         this.w = w;
@@ -23,7 +23,8 @@ class Boss{
         this.speed = s;
         this.vector = v;
         this.active = true;
-        this.hp = hp;
+        this.p = p;
+        this.hp = hp + this.plusHp;
         this.fire();
     }
 
@@ -38,14 +39,110 @@ class Boss{
         //폭발이펙트 생성
         App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
         this.active = false;
-        App.app.nextStage();
+        setTimeout( e => {
+            App.app.playStage ++;
+            App.app.time = 0;
+            App.app.backList = [];
+            App.app.nowEnemy = null;
+            App.app.gameTimer = 0;
+            App.app.stageIdx = 0;
+            App.app.cnt = 1; 
+            App.app.itemCnt = 1;
+            App.app.bossCnt ++;
+            this.plusHp += 50;
+            App.app.nextStage();
+        }, 5000);
+        
+        
     }
 
     fire(){ 
         if(!this.active) return;
-        App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0, 1));
-        App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-1, 1));
-        App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(1, 1));
+        if(App.app.bossCnt == 1) {
+            if(this.hp > 50) {
+                App.app.getOrCreateBullet(this.x + this.w / 2 + 20, this.y + this.h - 5 , 3, 300, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2 - 20, this.y + this.h - 5 , 3, 300, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0.4, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-0.4, 1));
+            }  else {
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.8, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.4, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.2, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.8, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.4, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.2, 1));
+            }
+        } else if(App.app.bossCnt == 2) {
+           if(this.hp > 75) {
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-1, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(1, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0.8, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0.6, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0.4, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(0.2, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-0.8, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-0.6, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-0.4, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 300, new Vector(-0.2, 1));
+           } else {
+            App.app.getOrCreateBullet(this.x + this.w / 2 + 20, this.y + this.h - 5 , 3, 350, new Vector(0, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2 - 20, this.y + this.h - 5 , 3, 350, new Vector(0, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-1, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(1, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.8, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.6, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.4, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.2, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.8, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.6, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.4, 1));
+            App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.2, 1));
+           }        
+        } else if(App.app.bossCnt == 3) {
+            if(this.hp > 100) {
+                App.app.getOrCreateBullet(this.x + this.w / 2 + 20, this.y + this.h - 5 , 3, 350, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2 - 20, this.y + this.h - 5 , 3, 350, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.8, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.4, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(0.2, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.8, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.4, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 350, new Vector(-0.2, 1));
+            } else {
+                App.app.getOrCreateBullet(this.x + this.w / 2 + 20, this.y + this.h - 5 , 3, 400, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2 - 20, this.y + this.h - 5 , 3, 400, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(0, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(-1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(1, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(0.8, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(0.4, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(0.2, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(-0.8, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(-0.6, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(-0.4, 1));
+                App.app.getOrCreateBullet(this.x + this.w / 2, this.y + this.h - 5 , 3, 400, new Vector(-0.2, 1));
+            }
+        }
+        
+        
         
         setTimeout(this.fire.bind(this), this.fireTerm); //2초 간격으로 쏘기 하기 위함
     }
@@ -54,7 +151,10 @@ class Boss{
         if(!this.hp){ 
             return; 
         }
-
+        if(this.hp == 50) {
+            App.app.getOrCreateExplosion(this.x, this.y, this.w, this.w);
+            this.hp = 49;
+        }
         if(!this.show && this.y > 100) {
             this.vector.y = 0;
             this.vector.x = 1;
@@ -76,19 +176,22 @@ class Boss{
         }
 
         
-        // console.log(this.x);
          
     }
 
     checkCollision(x,y,r){
         let centerX = this.x + this.w / 2;
         let centerY = this.y + this.h / 2;
+
         let d = Math.pow(centerX - x, 2) + Math.pow(centerY - y,2);
         return d < Math.pow(r + Math.min(this.w, this.h) / 2, 2);
+        
     }
 
     render(ctx){
         if(!this.active) return;
+        ctx.fillRect(this.x + this.w, this.y , 5, this.hp); 
+        ctx.clearRect(this.x + this.w,this.y, 5, this.hp);
         ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
     }
 }

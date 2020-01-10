@@ -4,10 +4,9 @@
         <div class="col-10 offset-1">
             <form method="post">
                 <div class="form-group row">
-                    <label for="userid" class="col-sm-2 col-form-label">Email</label>
+                    <label for="userid" class="col-sm-2 col-form-label">ID</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" 
-                            id="userid" name="userid" placeholder="Please enter your email">
+                        <input type="text" class="form-control" id="userid" name="userid" placeholder="Please enter your id">
                     </div>
                 </div>
                 <div class="form-group row">

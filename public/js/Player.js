@@ -9,13 +9,14 @@ class Player {
         this.hp = 3;
         this.keyArr = [];
         this.speed = 300;
-        this.fireTerm = 0.1;
+        this.fireTerm = 0.15;
         this.currentFireTerm = 0;
         this.init();
         this.active = true;
         this.bulletsound = new Audio();
         this.bulletsound.src = "/audio/bullet.mp3";
         this.power = 1;
+
     }
 
     setDamage(value){
@@ -40,6 +41,7 @@ class Player {
             if(e.code === "ArrowUp")    this.keyArr[2] = false;
             if(e.code === "ArrowDown")  this.keyArr[3] = false;
             if(e.code === "Space") 		this.keyArr[4] = false;
+            
         })
         
     }
@@ -53,14 +55,17 @@ class Player {
                 this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
                 break;
             case 2 :
+                this.app.getOrCreateBullet(this.x+this.w/2 -10, this.y , 3 , 300, new Vector(0,-1), false);
+                this.app.getOrCreateBullet(this.x+this.w/2 + 10, this.y , 3 , 300, new Vector(0,-1), false);
                 this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
-                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
                 break;
             case 3 :
             default:
+                this.app.getOrCreateBullet(this.x+this.w/2 -10, this.y , 3 , 300, new Vector(0,-1), false);
+                this.app.getOrCreateBullet(this.x+this.w/2 + 10, this.y , 3 , 300, new Vector(0,-1), false);
                 this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(0,-1), false);
-                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(1,-1), false);
-                this.app.getOrCreateBullet(this.x+this.w/2, this.y , 3 , 300, new Vector(-1,-1), false);            
+                this.app.getOrCreateBullet(this.x+this.w/2 +10, this.y , 3 , 300, new Vector(1,-1), false);
+                this.app.getOrCreateBullet(this.x+this.w/2 + -10, this.y , 3 , 300, new Vector(-1,-1), false);            
                 break;
         }
 
@@ -68,6 +73,8 @@ class Player {
         this.bulletsound.play();
         
     }
+
+    boom() {}
     
 
     checkCollision(x,y,r){
@@ -132,12 +139,12 @@ class Player {
         if(this.keyArr[2])  dy = -1;
         if(this.keyArr[3])  dy = 1;
         if(this.keyArr[4])  this.fire();
-
+        if(this.key) dx = - 10;
         this.x += dx * d * this.speed;
         this.y += dy * d * this.speed;
     }
 
-    render(ctx){
+    render(ctx){ 
         if(!this.active) return;
         ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
     }

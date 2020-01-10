@@ -5,16 +5,212 @@
 * {
     margin: 0;
     padding: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 #myGame {
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
+    position: absolute;
 }
+
+button {
+    border: none;
+}
+
+#container {
+    width: 500px;
+    margin: 0 auto;
+}
+
+.score {
+    margin-top: 30px;
+    margin-bottom: 50px;
+    color: #fff;
+    text-align: center;
+}
+
+
+#game button {
+    width: 140px;
+    height: 45px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+}
+
+#cheat {
+    margin-top: 10px;
+    border: none;
+}
+
+#game .startbtn:hover {
+    background-color: #0062cc;
+    box-shadow: 0px 15px 20px rgba(95, 46, 229, 0.4);
+    color: #fff;
+    transform: translateY(-7px);
+}
+
+#game .restart:hover {
+    background-color: #2EE59D;
+    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+    color: #fff;
+    transform: translateY(-7px);
+}
+
+#game .goMain {
+    margin-right: 30px;
+}
+
+#game .goMain:hover {
+    background-color: #0062cc;
+    box-shadow: 0px 15px 20px rgba(95, 46, 229, 0.4);
+    color: #fff;
+    transform: translateY(-7px);
+    
+}
+
+.end-btn {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.start{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 99;
+    width: 500px;
+    height: 800px;
+    margin: 0 auto;
+    background-color: #000000;
+}
+
+.end {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 500px;
+    height: 800px;
+    margin: 0 auto;
+    background-color: #000000;
+    display: none;
+}
+
+
+#content {
+    margin-top: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+}
+
+#mainBack> h1 {
+    text-align: center;
+    color: #fff;
+    margin-top: 30px;
+    font-size: 65px;
+}
+#content > * {
+    color: #fff;
+}
+
+.player {
+    text-align: center;
+    margin-right: 100px;
+}
+
+.boss {
+    text-align: center;
+}
+
+.boss-box {
+    display: flex;
+}
+
+#content h2 {
+    font-size: 45px;
+}
+
+.boss1-img {
+    width: 300px;
+    height: 200px;
+    background-image: url(/images/boss4.png);
+    transform:  rotate( 180deg);
+    background-size: 100% 100%;
+}
+
+.boss2-img {
+    width: 300px;
+    height: 200px;
+    background-image: url(/images/enemy7.png);
+    transform:  rotate( 180deg);
+    background-size: 100% 100%;
+}
+
+.player-img {
+    width: 300px;
+    height: 200px;
+    background-image: url(/images/player.png);
+    background-size: 100% 100%;
+    
+}
+
+.gameover {
+    width: 500px;
+    height: 300px;
+    background-image: url(/images/gameover.png);
+    background-size: 100% 100%;
+}
+
+.start > h1 {
+    position: absolute;
+    top: 100px;
+    font-size: 50px;
+    color: #fefefe;
+    /* margin-bottom: 100px; */
+}
+
+#mainBack {
+    width: 100%;
+    height: 1000px;
+    background: url(/images/sss.jpg);
+    background-size: 100% 100%;
+    opacity: 1;
+}
+
+#mainBack::before {
+    content: '';
+    position: absolute;
+    top: 56;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.view {
+    display: none;
+}
+
 
 #lobby {
     /* position: absolute; */
     width: 500px;
     height: 800px;
-    background-image: url(/images/main.jpg);
+    /* background-image: url(/images/main.jpg); */
     z-index: 99;
 }
 
